@@ -1,7 +1,51 @@
+package("libxforms")
+    set_homepage("http://xforms-toolkit.org/")
+    set_description("XForms Toolkit (\"Forms Library for X\")")
+
+    set_urls("https://download.savannah.nongnu.org/releases/xforms/xforms-$(version).tar.gz")
+    add_versions("1.2.4", "78cc6b07071bbeaa1f906e0a22d5e9980e48f8913577bc082d661afe5cb75696")
+
+	add_deps("libx11", "libjpeg")
+
+    add_configs("shared", {description = "Build shared library.", default = true, type = "boolean"})
+
+    on_install("macosx", "linux", function (package)
+        local configs = {
+            "--sysconfdir=" .. package:installdir("etc"),
+            "--localstatedir=" .. package:installdir("var"),
+            "--disable-dependency-tracking",
+            "--disable-silent-rules",
+            "--enable-unix-transport",
+            "--enable-tcp-transport",
+            "--enable-ipv6",
+            "--enable-local-transport",
+            "--enable-loadable-i18n",
+            "--enable-xthreads",
+            "--enable-specs=no",
+            "--with-extra-lib=/usr/local/lib/",
+            "--with-extra-inc=/usr/local/include/"
+        }
+        table.insert(configs, "--enable-static=" .. (package:config("shared") and "no" or "yes"))
+        table.insert(configs, "--enable-shared=" .. (package:config("shared") and "yes" or "no"))
+
+        if package:config("pic") then
+            table.insert(configs, "--with-pic")
+        end
+        import("package.tools.autoconf").install(package, configs)
+    end)
+
+    on_test(function (package)
+        assert(package:has_cfuncs("fl_initialize", { includes = "forms.h" }))
+    end)
+package_end()
+
 --Config:
 local packages = {
 	"gtk+3",
-	"libx11"
+	"libx11",
+	"libxaw",
+	"libxt",
+-- 	"libxforms"
 }
 
 local cflags = {
@@ -10,7 +54,8 @@ local cflags = {
         "-Wno-unused-function", "-Wno-unused-parameter", "-Wno-unused-variable"
     },
     regular = {
-        "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-ansi"
+        "-Wall", "-Wextra", "-Werror",
+--         "-Wpedantic", "-ansi"
     }
 }
 
@@ -36,8 +81,11 @@ do
 	add_includedirs("../src")
 
 	if is_plat("macosx") then
-		add_files("cocoa/**.m")
-		add_frameworks("Cocoa")
+-- 		add_files("cocoa/**.m")
+-- 		add_frameworks("Cocoa")
+
+		add_files("x11/**.c")
+        add_packages("libx11", "libxaw", "libxt")
 	elseif is_plat("linux") then
 		add_files("gtk/**.c")
 		add_packages("gtk")
@@ -45,7 +93,7 @@ do
 		add_files("win32/**.c")
 	else
 		add_files("x11/**.c")
-		add_packages("libx11")
+		add_packages("libx11", "libxaw", "libxt")
 	end
 
 	add_cflags(cflags.regular)

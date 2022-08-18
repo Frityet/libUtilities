@@ -57,7 +57,15 @@ do
         add_ldflags(ldflags.release)
     end
 
-	if is_plat("macosx") then add_frameworks("Cocoa") end
+	if is_plat("macosx") then
+    	add_frameworks("Cocoa")
+
+--         add_packages("libx11", "libxaw", "libxt")
+    elseif is_plat("linux") then
+--     	add_packages("gtk")
+    else
+--     	add_packages("libx11", "libxaw", "libxt")
+    end
 
 	add_deps("Utilities")
 end
