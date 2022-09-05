@@ -8,8 +8,8 @@
 int utilities_SaveDialogue_show(const struct utilities_SaveDialogue *dialogue, utilities_Path_t out)
 {
     NSSavePanel *panel = NSSavePanel.savePanel;
-    panel.title = cstring_to_nsstring(dialogue->window.title);
-    panel.message = cstring_to_nsstring(dialogue->message);
+    panel.title = [NSString fromCString: dialogue->window.title];
+    panel.message = [NSString fromCString: dialogue->message];
     panel.canCreateDirectories = true;
     panel.allowsOtherFileTypes = (BOOL)(dialogue->filetypes == NULL);
 
@@ -18,14 +18,14 @@ int utilities_SaveDialogue_show(const struct utilities_SaveDialogue *dialogue, u
     if (dialogue->filetypes != NULL && dialogue->filetype_count > 0) {
         NSMutableArray<NSString *> *strs = [NSMutableArray arrayWithCapacity: dialogue->filetype_count];
         for (size_t i = 0; i < dialogue->filetype_count; i++)
-            [strs addObject: cstring_to_nsstring(dialogue->filetypes[i])];
+            [strs addObject: [NSString fromCString: dialogue->filetypes[i]]];
 
         panel.allowedFileTypes = strs;
     }
 
     if ([panel runModal] != NSModalResponseOK) return 1;
     else {
-        nsstring_to_cstring(out, [panel.URL absoluteString], PATH_MAX);
+        [panel.URL.absoluteString copyToCString: out length: PATH_MAX];
         return 0;
     }
 }

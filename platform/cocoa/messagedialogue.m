@@ -6,23 +6,18 @@
 
 #include "common.m.h"
 
-static void initalise()
-{
-	[NSApplication sharedApplication];
-}
-
 int utilities_MessageDialogue_show(const struct utilities_MessageDialogue *messagebox, int *out)
 {
+	int tmp;
+	if (out == NULL) out = &tmp;
 	NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = cstring_to_nsstring(messagebox->window.title);
-    alert.informativeText = cstring_to_nsstring(messagebox->message);
+    alert.messageText = [NSString fromCString: messagebox->window.title];
+    alert.informativeText = [NSString fromCString: messagebox->message];
 
-    if (messagebox->options == NULL || messagebox->option_count < 1) {
-		[alert addButtonWithTitle:@"Yes"];
-		[alert addButtonWithTitle:@"No"];
-	} else {
-		for (int i = 0; i < messagebox->option_count; i++)
-			[alert addButtonWithTitle: cstring_to_nsstring(messagebox->options[i])];
+	/* For some reason, Cocao renders the buttons in reverse? */
+    if (messagebox->options != NULL || messagebox->option_count > 0) {
+		for (int i = messagebox->option_count; i > 0; i--)
+			[alert addButtonWithTitle: [NSString fromCString: messagebox->options[i - 1]]];
 	}
 
     *out = (int)([alert runModal] - 1000);

@@ -4,6 +4,9 @@ NSWindow *window = nil;
 NSApplication *application = nil;
 
 __attribute__((constructor(0)))
+///
+/// @brief Some Cocoa functions may require an NSApplication or NSWindow instance, this is the work-around
+///
 static void initialise()
 {
     if (window != nil && application != nil) return;

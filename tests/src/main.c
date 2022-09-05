@@ -5,8 +5,15 @@
 
 int main(void)
 {
-    int sel = 0;
-    utilities_MessageDialogue_show(&(struct utilities_MessageDialogue) {
-                                                                                .window.title = "Test"
-                                                                            }, &sel);
+    char arr[102];
+    
+    int errc = utilities_MessageDialogue_show(&(struct utilities_MessageDialogue) {
+                                                                                .window.title = "Test message",
+                                                                                .message = "Hello, World!",
+                                                                                .option_count = 2,
+                                                                                .options = (const char *[]) {
+                                                                                    "Au",
+                                                                                    "Revoir!"
+                                                                                }
+                                                                            }, NULL);
 }

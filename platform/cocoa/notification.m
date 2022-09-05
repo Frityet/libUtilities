@@ -8,6 +8,8 @@
 int utilities_Notification_show(const struct utilities_Notification *notification, int *resp)
 {
     block long retc = 0;
+    (void)notification;
+    (void)resp;
 //    UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;
 //    [center requestAuthorizationWithOptions: UNAuthorizationOptionBadge
 //                          completionHandler: ^(BOOL is_error, NSError *err) {

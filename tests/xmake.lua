@@ -8,7 +8,8 @@ local sanitizers = { "address", "leak", "undefined" }
 local cflags = {
     release = {},
     debug = {
-        "-Wno-unused-function", "-Wno-unused-parameter", "-Wno-unused-variable"
+        "-Wno-unused-function", "-Wno-unused-parameter", "-Wno-unused-variable",
+        "-Wno-gnu-designator"
     },
     regular = {
         "-Wall", "-Wextra", "-Werror"

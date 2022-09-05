@@ -42,10 +42,10 @@ package_end()
 --Config:
 local packages = {
 	"gtk+3",
-	"libx11",
-	"libxaw",
-	"libxt",
--- 	"libxforms"
+	-- "libx11",
+	-- "libxaw",
+	-- "libxt",
+    -- "libxforms"
 }
 
 local cflags = {
@@ -66,8 +66,7 @@ local ldflags = {
 }
 
 set_languages {
-    "c89",
-	"cxx98"
+    "c89"
 }
 
 add_rules("mode.debug", "mode.release")
@@ -81,11 +80,18 @@ do
 	add_includedirs("../src")
 
 	if is_plat("macosx") then
--- 		add_files("cocoa/**.m")
--- 		add_frameworks("Cocoa")
+		-- add_files("cocoa/**.m")
+		-- add_frameworks("Cocoa")
 
-		add_files("x11/**.c")
-        add_packages("libx11", "libxaw", "libxt")
+        -- set_languages("c99")
+        -- if is_mode("debug") then add_mflags(cflags.debug) end
+        -- add_mflags(cflags.regular)
+        -- --Suck it, apple
+        -- add_mflags("-Wno-deprecated-declarations")
+
+        add_files("gtk/**.c")
+        add_packages("gtk+3")
+        -- add_packages("libx11", "libxaw", "libxt")
 	elseif is_plat("linux") then
 		add_files("gtk/**.c")
 		add_packages("gtk")

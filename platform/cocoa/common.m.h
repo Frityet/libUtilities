@@ -12,13 +12,19 @@
 extern NSWindow *window;
 extern NSApplication *application;
 
-static NSString *cstring_to_nsstring(const char *str)
-{
-	return [NSString stringWithCString: str
-							   encoding: NSUTF8StringEncoding];
-}
+@interface NSString(StringExtensions)
 
-static char *nsstring_to_cstring(char *cstr, NSString *nsstr, size_t len)
-{
-	return strncpy(cstr, [nsstr cStringUsingEncoding: NSUTF8StringEncoding], len);
-}
++ (NSString *)fromCString: (const char *)cstr;
+- (const char *)copyToCString: (char *)buffer length: (size_t)len;
+
+@end
+
+@implementation NSString(StringExtensions)
+
++ (NSString *)fromCString: (const char *)cstr
+{ return [NSString stringWithCString: cstr encoding: NSUTF8StringEncoding]; }
+
+- (const char *)copyToCString: (char *)buf length: (size_t)len
+{ return strncpy(buf, [self cStringUsingEncoding: NSUTF8StringEncoding], len); }
+
+@end

@@ -22,14 +22,11 @@ set_languages {
 
 add_rules("mode.debug", "mode.release")
 
-add_requires(packages)
-
 includes("platform")
 
 target("Utilities")
 do
     set_kind("shared")
-    add_packages(packages)
 
     add_headerfiles("src/**.h")
 
